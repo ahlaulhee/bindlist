@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Bind, Keybind } from "./vite-env";
+import store from "store2";
 
 const emptyKeybind: Keybind = {
   action: "",
@@ -19,23 +20,16 @@ function App() {
   const [keybind, setKeybind] = useState<Keybind>(emptyKeybind);
 
   useEffect(() => {
-    // TODO: Load keybinds from LocalStorage
-    setKeybinds([]);
+    const keybinds = store.get("userKeybinds");
+    const convertedKeybinds: Keybind[] = JSON.parse(keybinds);
+    setKeybinds(convertedKeybinds);
   }, []);
 
   const storeKeybind = () => {
     if (!keybind.action || !keybind.category || !keybind.bind.key) return;
     keybinds.push(keybind);
+    store.set("userKeybinds", JSON.stringify(keybinds));
     setKeybind(emptyKeybind);
-    // TODO: Save to LocalStorage
-    console.log(keybind);
-    console.log(keybinds);
-  };
-
-  const formatBind = (bind: Bind) => {
-    return `${bind.ctrl ? "Ctrl+" : ""}${bind.super ? "Super+" : ""}${
-      bind.alt ? "Alt+" : ""
-    }${bind.shift ? "Shift+" : ""}${bind.key}`;
   };
 
   const exportJSON = () => {
@@ -125,15 +119,7 @@ function App() {
           Store Keybind
         </button>
       </section>
-      <section className="block">
-        {keybinds.map((keybind, i) => {
-          return (
-            <div className="block" key={i}>
-              {formatBind(keybind.bind)} | {keybind.action} | {keybind.category}
-            </div>
-          );
-        })}
-      </section>
+      <section className="block">{KeybindsList(keybinds)}</section>
       <section>
         <button className="block accent" onClick={exportJSON}>
           Export JSON
@@ -159,6 +145,38 @@ function CheckboxWithLabel({
     <div className="block" onClick={onChange}>
       <input type="checkbox" checked={checked} readOnly />
       <label>{label}</label>
+    </div>
+  );
+}
+
+const formatBind = (bind: Bind) => {
+  return `${bind.ctrl ? "Ctrl+" : ""}${bind.super ? "Super+" : ""}${
+    bind.alt ? "Alt+" : ""
+  }${bind.shift ? "Shift+" : ""}${bind.key}`;
+};
+
+function KeybindsList(keybinds: Keybind[]) {
+  const groupedKeybinds: { [key: string]: Keybind[] } = {};
+  keybinds.forEach((keybind) => {
+    const group = keybind.category;
+    if (!groupedKeybinds[group]) {
+      groupedKeybinds[group] = [];
+    }
+    groupedKeybinds[group].push(keybind);
+  });
+
+  return (
+    <div>
+      {Object.entries(groupedKeybinds).map(([group, keybindsInGroup]) => (
+        <div key={group}>
+          <h3>{group}</h3>
+          {keybindsInGroup.map((keybind, index) => (
+            <div className="block" key={index}>
+              {formatBind(keybind.bind)} | {keybind.action}
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }

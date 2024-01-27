@@ -4,11 +4,19 @@
   font-weight: 400;
 
   /* color-scheme: light dark; */
+  background-color: #0e0e0e;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  --block-text-color: #d5d8da;
+  --block-background-color: #0e0e0e;
+  --block-accent-color: #ec6a88;
+  --block-shadow-color: #c3c5c7;
 }
 
 /* body {
