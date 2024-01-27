@@ -3,6 +3,10 @@ import "./App.css";
 import { Bind, Keybind } from "./vite-env";
 import store from "store2";
 
+// TODO: Refactor most of the code
+// TODO: Allow updates?
+// TODO: Allow multiple selection for deletion
+
 const emptyKeybind: Keybind = {
   action: "",
   bind: {
@@ -26,6 +30,7 @@ function App() {
   }, []);
 
   const storeKeybind = () => {
+    // TODO: Add a popup notification
     if (!keybind.action || !keybind.category || !keybind.bind.key) return;
     keybinds.push(keybind);
     store.set("userKeybinds", JSON.stringify(keybinds));
@@ -33,11 +38,46 @@ function App() {
   };
 
   const exportJSON = () => {
-    // TODO: Retrieve from localstorage and download .json
+    // TODO: Add a popup notification
+    const keybinds = store.get("userKeybinds");
+    const currentDate = new Date();
+    const formattedDate = currentDate
+      .toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      })
+      .replace(/\//g, "_");
+    const blob = new Blob([keybinds], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `userKeybinds_${formattedDate}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
-  const importJSON = () => {
-    // TODO: Save .json data to localstorage and modify state
+  const importJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // TODO: Add a popup notification
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          try {
+            const jsonData: Keybind[] = JSON.parse(e.target.result as string);
+            setKeybinds(jsonData);
+            console.log(jsonData);
+          } catch (error) {
+            console.error("Error parsing JSON file:", error);
+          }
+        } else {
+          console.error("Empty or null result from FileReader");
+        }
+      };
+      reader.readAsText(file);
+    }
   };
 
   return (
@@ -124,9 +164,14 @@ function App() {
         <button className="block accent" onClick={exportJSON}>
           Export JSON
         </button>
-        <button className="block accent" onClick={importJSON}>
-          Import JSON
-        </button>
+        <div className="wrapper block">
+          <input
+            type="file"
+            accept=".json"
+            className="block"
+            onChange={importJSON}
+          />
+        </div>
       </section>
     </>
   );
@@ -156,6 +201,7 @@ const formatBind = (bind: Bind) => {
 };
 
 function KeybindsList(keybinds: Keybind[]) {
+  // TODO: Style this component
   const groupedKeybinds: { [key: string]: Keybind[] } = {};
   keybinds.forEach((keybind) => {
     const group = keybind.category;
