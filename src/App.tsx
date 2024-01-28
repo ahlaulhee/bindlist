@@ -10,6 +10,8 @@ import { InputField } from "./components/InputField";
 // TODO: Refactor most of the code
 // TODO: Allow updates?
 // TODO: Allow multiple selection for deletion
+// TODO: Hide top and bottom bar
+// TODO: Allow the user to theme the page and save and load the theme from localstorage
 
 const emptyKeybind: Keybind = {
   action: "",
@@ -116,7 +118,7 @@ function App() {
           Store Keybind
         </button>
       </section>
-      <section className="block">{KeybindsList(keybinds)}</section>
+      <main>{KeybindsList(keybinds)}</main>
       <section>
         <button className="block accent" onClick={exportJSON}>
           Export JSON
