@@ -3,15 +3,16 @@ import "./App.css";
 import { Keybind } from "./vite-env";
 import store from "store2";
 import { exportJSON, importJSON } from "./utils/jsonUtils";
-import { CheckboxWithLabel } from "./components/CheckboxWithLabel";
 import { KeybindsList } from "./components/KeybindsList";
-import { InputField } from "./components/InputField";
+
+import { IoMdSettings, IoMdDocument, IoMdBrush } from "react-icons/io";
+import { TopBar } from "./components/TopBar";
 
 // TODO: Refactor most of the code
 // TODO: Allow updates?
 // TODO: Allow multiple selection for deletion
-// TODO: Hide top and bottom bar
 // TODO: Allow the user to theme the page and save and load the theme from localstorage
+// TODO: Add validations
 
 const emptyKeybind: Keybind = {
   action: "",
@@ -23,16 +24,19 @@ const emptyKeybind: Keybind = {
     key: "",
   },
   category: "",
+  color: "#ec6a88",
 };
 
 function App() {
   const [keybinds, setKeybinds] = useState<Keybind[]>([]);
   const [keybind, setKeybind] = useState<Keybind>(emptyKeybind);
+  const [hideTopBar, setHideTopBar] = useState<boolean>(false);
+  const [hideBottomBar, setHideBottomBar] = useState<boolean>(false);
 
   useEffect(() => {
     const keybinds = store.get("userKeybinds");
     const convertedKeybinds: Keybind[] = JSON.parse(keybinds);
-    setKeybinds(convertedKeybinds);
+    setKeybinds(convertedKeybinds || []);
   }, []);
 
   const storeKeybind = () => {
@@ -49,76 +53,31 @@ function App() {
     });
   };
 
-  return (
-    <>
-      <section>
-        <button className="block accent">Listen to keys</button>
-        <InputField
-          placeholder="Action..."
-          value={keybind.action}
-          onChange={(e) => setKeybind({ ...keybind, action: e.target.value })}
-        />
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setKeybind((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-        <InputField
-          placeholder="Category..."
-          value={keybind.category}
-          onChange={(e) => setKeybind({ ...keybind, category: e.target.value })}
-        />
-        <CheckboxWithLabel
-          label="Control"
-          checked={keybind.bind.ctrl}
-          onChange={() =>
-            setKeybind({
-              ...keybind,
-              bind: { ...keybind.bind, ctrl: !keybind.bind.ctrl },
-            })
-          }
-        />
-        <CheckboxWithLabel
-          label="Super"
-          checked={keybind.bind.super}
-          onChange={() =>
-            setKeybind({
-              ...keybind,
-              bind: { ...keybind.bind, super: !keybind.bind.super },
-            })
-          }
-        />
-        <CheckboxWithLabel
-          label="Alt"
-          checked={keybind.bind.alt}
-          onChange={() =>
-            setKeybind({
-              ...keybind,
-              bind: { ...keybind.bind, alt: !keybind.bind.alt },
-            })
-          }
-        />
-        <CheckboxWithLabel
-          label="Shift"
-          checked={keybind.bind.shift}
-          onChange={() =>
-            setKeybind({
-              ...keybind,
-              bind: { ...keybind.bind, shift: !keybind.bind.shift },
-            })
-          }
-        />
-        <InputField
-          placeholder="Key..."
-          value={keybind.bind.key}
-          onChange={(e) =>
-            setKeybind({
-              ...keybind,
-              bind: { ...keybind.bind, key: e.target.value },
-            })
-          }
-        />
-        <button className="block accent" onClick={storeKeybind}>
-          Store Keybind
-        </button>
-      </section>
-      <main>{KeybindsList(keybinds)}</main>
+  const handleCheckBoxClick = (key: string, value: boolean) => {
+    setKeybind({
+      ...keybind,
+      bind: { ...keybind.bind, [key]: value },
+    });
+  };
+
+  const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setKeybind({
+      ...keybind,
+      bind: { ...keybind.bind, key: value },
+    });
+  };
+
+  const BottomBar = () => {
+    return (
       <section>
         <button className="block accent" onClick={exportJSON}>
           Export JSON
@@ -132,6 +91,35 @@ function App() {
           />
         </div>
       </section>
+    );
+  };
+
+  return (
+    <>
+      <div className="settings">
+        <IoMdSettings
+          onClick={() => setHideTopBar(!hideTopBar)}
+          size={30}
+          style={{ color: "#ffffff" }}
+        />
+        <IoMdDocument
+          onClick={() => setHideBottomBar(!hideBottomBar)}
+          size={30}
+          style={{ color: "#ffffff" }}
+        />
+        <IoMdBrush size={30} style={{ color: "#ffffff" }} />
+      </div>
+      {!hideTopBar ? (
+        <TopBar
+          keybind={keybind}
+          handleInputChange={handleInputChange}
+          handleKeyChange={handleKeyChange}
+          handleCheckBoxClick={handleCheckBoxClick}
+          storeKeybind={storeKeybind}
+        />
+      ) : null}
+      <main>{KeybindsList(keybinds)}</main>
+      {!hideBottomBar ? <BottomBar /> : null}
     </>
   );
 }

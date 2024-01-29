@@ -46,7 +46,7 @@ input[type="file"] {
   flex-wrap: wrap;
   flex-direction: column;
   column-gap: 20px;
-  height: 100vh;
+  height: 97vh;
   color: #d5d8da;
   border: 2px solid white;
   padding: 4px;
@@ -59,4 +59,17 @@ input[type="file"] {
   flex-direction: column;
   flex-wrap: wrap;
   column-gap: 20px;
+}
+
+.settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 12px;
+}
+
+.colorPicker {
+  justify-content: center;
+  align-self: center;
+  margin: 0;
 }

@@ -5,7 +5,7 @@ export function CheckboxWithLabel({
 }: {
   label: string;
   checked: boolean;
-  onChange: () => void;
+  onChange: (e: React.MouseEvent) => void;
 }) {
   return (
     <div className="block" onClick={onChange}>

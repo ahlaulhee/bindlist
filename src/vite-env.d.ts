@@ -3,6 +3,7 @@ export interface Keybind {
   action: string;
   bind: Bind;
   category: string;
+  color: string;
 }
 
 export interface Bind {
