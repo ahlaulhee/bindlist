@@ -1,5 +1,6 @@
 import { Keybind } from "../vite-env";
 import { CheckboxWithLabel } from "./CheckboxWithLabel";
+import { ColorPicker } from "./ColorPicker";
 import { InputField } from "./InputField";
 
 export const TopBar = ({
@@ -10,7 +11,11 @@ export const TopBar = ({
   storeKeybind,
 }: {
   keybind: Keybind;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
   handleKeyChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCheckBoxClick: (key: string, value: boolean) => void;
   storeKeybind: () => void;
@@ -30,9 +35,7 @@ export const TopBar = ({
         onChange={handleInputChange}
         name="category"
       />
-      <input
-        className="colorPicker"
-        type="color"
+      <ColorPicker
         value={keybind.color}
         onChange={handleInputChange}
         name="color"

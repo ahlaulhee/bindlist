@@ -53,7 +53,11 @@ function App() {
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const { value, name } = e.target;
     setKeybind((prevState) => ({
       ...prevState,
