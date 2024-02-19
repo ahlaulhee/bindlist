@@ -44,21 +44,22 @@ select {
 }
 
 .groupTitle {
-  background-color: var(--block-accent-color);
   color: var(--block-background-color);
   font-weight: 700;
   font-size: 1rem;
   width: fit-content;
   padding-inline: 10px;
-  margin: 0px;
+}
+
+.groupTitleBlock {
+  text-align: center;
 }
 
 .keybindListContainer {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
-  column-gap: 20px;
-  height: 97vh;
+  justify-content: space-between;
+  gap: 16px;
   color: #d5d8da;
   border: 2px solid white;
   padding: 4px;
@@ -80,8 +81,15 @@ select {
   margin: 12px;
 }
 
-.colorPicker {
-  justify-content: center;
-  align-self: center;
-  margin: 0;
+.keybindBlock {
+  background: #232530;
+  width: 450px;
+  height: fit-content;
+}
+
+.actionKeybind {
+  display: flex;
+  justify-content: space-between;
+  margin-inline: 8px;
+  gap: 16px;
 }

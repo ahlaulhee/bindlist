@@ -30,8 +30,8 @@ const emptyKeybind: Keybind = {
 function App() {
   const [keybinds, setKeybinds] = useState<Keybind[]>([]);
   const [keybind, setKeybind] = useState<Keybind>(emptyKeybind);
-  const [hideTopBar, setHideTopBar] = useState<boolean>(false);
-  const [hideBottomBar, setHideBottomBar] = useState<boolean>(false);
+  const [hideTopBar, setHideTopBar] = useState<boolean>(true);
+  const [hideBottomBar, setHideBottomBar] = useState<boolean>(true);
 
   useEffect(() => {
     const keybinds = store.get("userKeybinds");

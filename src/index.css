@@ -1,10 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Sometype+Mono:ital,wght@0,400..700;1,400..700&display=swap");
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+  font-family: "Sometype Mono", monospace;
+  font-size: 0.95rem;
   line-height: 1.5;
   font-weight: 400;
 
   /* color-scheme: light dark; */
-  background-color: #0e0e0e;
+  background-color: #16161c;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
